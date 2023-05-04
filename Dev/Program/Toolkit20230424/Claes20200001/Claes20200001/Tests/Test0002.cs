@@ -124,11 +124,16 @@ namespace Charlotte.Tests
 
 			// ----
 
-			if (Picture.W < Exterior.W || Picture.H < Exterior.H) // 背面側について拡大した場合、画像が荒くなるのでボカす。前面側はケアしない。
+			if (Picture.W < Exterior.W || Picture.H < Exterior.H) // 背面側について拡大した場合、画像が荒くなるのでボカす。
 				canvas.Blur(5);
 
 			canvas.FilterAllDot((dot, x, y) => new I4Color(dot.R / 2, dot.G / 2, dot.B / 2, 255));
-			canvas.DrawImage(Picture_I, Interior.L, Interior.T, false);
+
+			if (Picture.W < Interior.W || Picture.H < Interior.H) // ? 拡大してしまう
+				canvas.DrawImage(Picture, (MONITOR_SIZE.W - Picture.W) / 2, (MONITOR_SIZE.H - Picture.H) / 2, false); // そのまま
+			else
+				canvas.DrawImage(Picture_I, Interior.L, Interior.T, false); // 縮小
+
 			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + ".png"));
 		}
 	}
