@@ -74,33 +74,27 @@ namespace Charlotte.Tests
 
 					if (Interior.T < 5 && Interior.L < 5) // ? アスペクト比が(同じ || ほとんど同じ)
 					{
-						if (!ExteriorExpanded) // 拡大することになる場合、生成しない。
-						{
-							OutputSimple();
-						}
+						OutputSimple();
 					}
 					else
 					{
 						Picture_I = Picture.Expand(Interior.W, Interior.H);
 						Picture_E = Picture.Expand(Exterior.W, Exterior.H);
 
-						if (!ExteriorExpanded) // 背面側について拡大した場合、背面のみの壁紙は生成しない。
-						{
-							OutputTopOrLeft();
-							OutputBottomOrRight();
-						}
+						OutputTopOrLeft();
+						OutputBottomOrRight();
 						OutputCenter();
 
 						Picture_I = null;
 						Picture_E = null;
-						InteriorExpanded = default(bool);
-						ExteriorExpanded = default(bool);
 					}
 
 					PictureName = null;
 					Picture = null;
 					Interior = default(I4Rect);
 					Exterior = default(I4Rect);
+					InteriorExpanded = default(bool);
+					ExteriorExpanded = default(bool);
 
 					ProcMain.WriteLog("done");
 				}
@@ -108,48 +102,53 @@ namespace Charlotte.Tests
 			ProcMain.WriteLog("done!");
 		}
 
+		private const string SUPPLEMENT_EXPANDED = "_(★拡大した)";
+
 		private void OutputSimple()
 		{
+			string supplement = ExteriorExpanded ? SUPPLEMENT_EXPANDED : "";
 			Canvas canvas = Picture;
 			canvas = canvas.Expand(MONITOR_SIZE.W, MONITOR_SIZE.H);
-			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + ".png"));
+			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + supplement + ".png"));
 		}
 
 		private void OutputTopOrLeft()
 		{
 			string suffix = Exterior.L == 0 ? "T" : "L";
+			string supplement = ExteriorExpanded ? SUPPLEMENT_EXPANDED : "";
 			Canvas canvas = Picture_E;
 			canvas = canvas.GetSubImage(new I4Rect(0, 0, MONITOR_SIZE.W, MONITOR_SIZE.H));
-			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + suffix + ".png"));
+			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + suffix + supplement + ".png"));
 		}
 
 		private void OutputBottomOrRight()
 		{
 			string suffix = Exterior.L == 0 ? "B" : "R";
+			string supplement = ExteriorExpanded ? SUPPLEMENT_EXPANDED : "";
 			Canvas canvas = Picture_E;
 			canvas = canvas.GetSubImage(new I4Rect(Exterior.W - MONITOR_SIZE.W, Exterior.H - MONITOR_SIZE.H, MONITOR_SIZE.W, MONITOR_SIZE.H));
-			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + suffix + ".png"));
+			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + suffix + supplement + ".png"));
 		}
 
 		private void OutputCenter()
 		{
 			string suffix = "C";
+			string supplement = ExteriorExpanded ? SUPPLEMENT_EXPANDED : "";
 			Canvas canvas = Picture_E;
 			canvas = canvas.GetSubImage(new I4Rect((Exterior.W - MONITOR_SIZE.W) / 2, (Exterior.H - MONITOR_SIZE.H) / 2, MONITOR_SIZE.W, MONITOR_SIZE.H));
-			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + suffix + ".png"));
+			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + suffix + supplement + ".png"));
 
 			// ----
 
-			if (ExteriorExpanded) // 背面側について拡大した場合、画像が荒くなるのでボカす。
+			if (ExteriorExpanded)
 				canvas.Blur(5);
 
 			canvas.FilterAllDot((dot, x, y) => new I4Color(dot.R / 2, dot.G / 2, dot.B / 2, 255));
 
-			// 前面を描画
 			if (InteriorExpanded)
-				canvas.DrawImage(Picture, (MONITOR_SIZE.W - Picture.W) / 2, (MONITOR_SIZE.H - Picture.H) / 2, false); // 拡大してしまう -> そのまま中央に描画
+				canvas.DrawImage(Picture, (MONITOR_SIZE.W - Picture.W) / 2, (MONITOR_SIZE.H - Picture.H) / 2, false);
 			else
-				canvas.DrawImage(Picture_I, Interior.L, Interior.T, false); // 縮小して描画
+				canvas.DrawImage(Picture_I, Interior.L, Interior.T, false);
 
 			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + ".png"));
 		}
