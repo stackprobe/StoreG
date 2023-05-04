@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
 	LOGPOS();
 
-	errorCase_m(!m_isupper(alpha), "Bad alpha (Not A-Z)");
+	errorCase_m(!m_isupper(alpha), "Bad alpha (not A-Z)");
 
 	destRootDir = xcout(W_ROOT_DIR_FORMAT, alpha);
 
