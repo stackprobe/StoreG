@@ -49,26 +49,39 @@ static void RemoveNotNeedFiles(char *dir)
 	}
 	unaddCwd();
 }
+static char *GetDestRootDir(void)
+{
+	int alpha;
+
+	for (alpha = 'A'; alpha <= 'Z'; alpha++)
+	{
+		char *dir = xcout(W_ROOT_DIR_FORMAT, alpha);
+
+		if (existDir(dir))
+			return dir;
+
+		memFree(dir);
+	}
+	error_m("no W_ROOT_DIR");
+	return NULL; // dummy
+}
 int main(int argc, char **argv)
 {
-	int alpha = nextArg()[0];
-	char *wRootDir;
+	char *destRootDir = GetDestRootDir();
 
-	LOGPOS();
-	errorCase_m(!m_isupper(alpha), "Bad alpha (Not A-Z)");
-
-	wRootDir = xcout(W_ROOT_DIR_FORMAT, alpha);
+	cout("< %s\n", R_ROOT_DIR);
+	cout("> %s\n", destRootDir);
 
 	errorCase(!existDir(R_ROOT_DIR));
-	errorCase(!existDir(wRootDir));
+	errorCase(!existDir(destRootDir)); // 2bs
 
 	LOGPOS();
-	ClearRepoDir(wRootDir);
+	ClearRepoDir(destRootDir);
 	LOGPOS();
-	CopyToRepoDir(R_ROOT_DIR, wRootDir);
+	CopyToRepoDir(R_ROOT_DIR, destRootDir);
 	LOGPOS();
-	RemoveNotNeedFiles(wRootDir);
+	RemoveNotNeedFiles(destRootDir);
 	LOGPOS();
 
-	memFree(wRootDir);
+	memFree(destRootDir);
 }

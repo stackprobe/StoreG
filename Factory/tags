@@ -7770,7 +7770,8 @@ C:\Factory\Petra\GitRelease.c(6) : ClearRepoDir // ä÷êî
 C:\Factory\Petra\GitRelease.c(10) : IsCancelCopyToRepoDir // ä÷êî
 C:\Factory\Petra\GitRelease.c(22) : CopyToRepoDir // ä÷êî
 C:\Factory\Petra\GitRelease.c(43) : RemoveNotNeedFiles // ä÷êî
-C:\Factory\Petra\GitRelease.c(52) : main // ä÷êî
+C:\Factory\Petra\GitRelease.c(52) : GetDestRootDir // ä÷êî
+C:\Factory\Petra\GitRelease.c(68) : main // ä÷êî
 C:\Factory\Petra\Lock.c(7) : main // ä÷êî
 C:\Factory\Petra\MoveDevOutToHPStore.c(12) : main // ä÷êî
 C:\Factory\Petra\PublicLog.c(7) : LOG_FILE // íËã`
