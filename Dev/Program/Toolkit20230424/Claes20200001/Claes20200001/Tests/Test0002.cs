@@ -23,6 +23,17 @@ namespace Charlotte.Tests
 
 		private static I2Size MONITOR_SIZE = new I2Size(1920, 1080);
 
+		// ----
+
+		private string PictureName;
+		private Canvas Picture;
+		private Canvas Picture_I;
+		private Canvas Picture_E;
+		private I4Rect Interior;
+		private I4Rect Exterior;
+		private bool InteriorExpanded;
+		private bool ExteriorExpanded;
+
 		public void Test01()
 		{
 			foreach (string file in Directory.GetFiles(INPUT_ROOT_DIR))
@@ -47,6 +58,8 @@ namespace Charlotte.Tests
 
 					Interior = rects[0].ToI4Rect();
 					Exterior = rects[1].ToI4Rect();
+					InteriorExpanded = Picture.W < Interior.W || Picture.H < Interior.H;
+					ExteriorExpanded = Picture.W < Exterior.W || Picture.H < Exterior.H;
 
 					ProcMain.WriteLog("I.L " + Interior.L);
 					ProcMain.WriteLog("I.T " + Interior.T);
@@ -56,22 +69,32 @@ namespace Charlotte.Tests
 					ProcMain.WriteLog("E.T " + Exterior.T);
 					ProcMain.WriteLog("E.W " + Exterior.W);
 					ProcMain.WriteLog("E.H " + Exterior.H);
+					ProcMain.WriteLog("I-X " + InteriorExpanded);
+					ProcMain.WriteLog("E-X " + ExteriorExpanded);
 
 					if (Interior.T < 5 && Interior.L < 5) // ? アスペクト比が(同じ || ほとんど同じ)
 					{
-						OutputSimple();
+						if (!ExteriorExpanded) // 拡大することになる場合、生成しない。
+						{
+							OutputSimple();
+						}
 					}
 					else
 					{
 						Picture_I = Picture.Expand(Interior.W, Interior.H);
 						Picture_E = Picture.Expand(Exterior.W, Exterior.H);
 
-						OutputTopOrLeft();
-						OutputBottomOrRight();
+						if (!ExteriorExpanded) // 背面側について拡大した場合、背面のみの壁紙は生成しない。
+						{
+							OutputTopOrLeft();
+							OutputBottomOrRight();
+						}
 						OutputCenter();
 
 						Picture_I = null;
 						Picture_E = null;
+						InteriorExpanded = default(bool);
+						ExteriorExpanded = default(bool);
 					}
 
 					PictureName = null;
@@ -84,13 +107,6 @@ namespace Charlotte.Tests
 			}
 			ProcMain.WriteLog("done!");
 		}
-
-		private string PictureName;
-		private Canvas Picture;
-		private Canvas Picture_I;
-		private Canvas Picture_E;
-		private I4Rect Interior;
-		private I4Rect Exterior;
 
 		private void OutputSimple()
 		{
@@ -124,15 +140,16 @@ namespace Charlotte.Tests
 
 			// ----
 
-			if (Picture.W < Exterior.W || Picture.H < Exterior.H) // 背面側について拡大した場合、画像が荒くなるのでボカす。
+			if (ExteriorExpanded) // 背面側について拡大した場合、画像が荒くなるのでボカす。
 				canvas.Blur(5);
 
 			canvas.FilterAllDot((dot, x, y) => new I4Color(dot.R / 2, dot.G / 2, dot.B / 2, 255));
 
-			if (Picture.W < Interior.W || Picture.H < Interior.H) // ? 拡大してしまう
-				canvas.DrawImage(Picture, (MONITOR_SIZE.W - Picture.W) / 2, (MONITOR_SIZE.H - Picture.H) / 2, false); // そのまま
+			// 前面を描画
+			if (InteriorExpanded)
+				canvas.DrawImage(Picture, (MONITOR_SIZE.W - Picture.W) / 2, (MONITOR_SIZE.H - Picture.H) / 2, false); // 拡大してしまう -> そのまま中央に描画
 			else
-				canvas.DrawImage(Picture_I, Interior.L, Interior.T, false); // 縮小
+				canvas.DrawImage(Picture_I, Interior.L, Interior.T, false); // 縮小して描画
 
 			canvas.Save(Path.Combine(SCommon.GetOutputDir(), PictureName + ".png"));
 		}
