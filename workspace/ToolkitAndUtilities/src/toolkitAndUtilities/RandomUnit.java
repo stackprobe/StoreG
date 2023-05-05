@@ -24,7 +24,7 @@ public class RandomUnit {
 		return getBytes(1)[0];
 	}
 
-	public int getInt() {
+	public int getInt32() {
 		byte[] data = getBytes(4);
 		int returnValue =
 				((data[0] & 0xff) <<  0) |
@@ -35,10 +35,10 @@ public class RandomUnit {
 	}
 
 	public int getPositiveInt() {
-		return getInt() & 0x7fffffff;
+		return getInt32() & 0x7fffffff;
 	}
 
-	private long getLong48() {
+	public long getLong48() {
 		byte[] data = getBytes(6);
 		long returnValue =
 				((data[0] & 0xffL) <<  0) |
@@ -50,7 +50,7 @@ public class RandomUnit {
 		return returnValue;
 	}
 
-	public long getLong() {
+	public long getLong64() {
 		byte[] data = getBytes(8);
 		long returnValue =
 				((data[0] & 0xffL) <<  0) |
@@ -65,12 +65,19 @@ public class RandomUnit {
 	}
 
 	public long getPositiveLong() {
-		return getLong() & 0x7fffffffffffffffL;
+		return getLong64() & 0x7fffffffffffffffL;
+	}
+
+	public long getLong(long modulo) {
+		if (modulo < 1) {
+			throw new Error("Bad modulo");
+		}
+		return getPositiveLong() % modulo;
 	}
 
 	public int getInt(int modulo) {
 		if (modulo < 1) {
-			throw new Error();
+			throw new Error("Bad modulo");
 		}
 		return (int)(getPositiveLong() % (long)modulo);
 	}

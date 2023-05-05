@@ -31,7 +31,7 @@ namespace Charlotte.Tests
 
 			for (int testcnt = 0; testcnt < testCount; testcnt++)
 			{
-				ulong n = SCommon.CRandom.GetULong_M(scale);
+				ulong n = SCommon.CRandom.GetULong(scale);
 
 				bool ans1 = Test01_b1(n);
 				bool ans2 = Test01_b2(n);

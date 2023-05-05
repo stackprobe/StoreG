@@ -138,6 +138,8 @@ namespace Charlotte.GameCommons
 				logSaveDir = @"C:\temp";
 				logFile = @"C:\temp\Game.log";
 				saveDataFile = @"C:\temp\SaveData.dat";
+#else
+				throw new Exception("never pass through here");
 #endif
 			}
 			else

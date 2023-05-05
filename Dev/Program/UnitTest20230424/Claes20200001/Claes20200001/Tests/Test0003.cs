@@ -85,13 +85,13 @@ namespace Charlotte.Tests
 			{
 				if (testcnt % 1000 == 0) Console.WriteLine("TEST-0003-02, " + testcnt); // cout
 
-				uint[] table = SCommon.Generate(SCommon.CRandom.GetRange(1, 1000), () => SCommon.CRandom.GetUInt()).ToArray();
+				uint[] table = SCommon.Generate(SCommon.CRandom.GetRange(1, 1000), () => SCommon.CRandom.GetUInt32()).ToArray();
 
 				RandomUnit ru = new RandomUnit(new RandomNumberGenerator_02() { Table = table });
 
 				//for (int c = 0; c < 100; c++)
 				foreach (uint value in table)
-					if (ru.GetUInt() != value)
+					if (ru.GetUInt32() != value)
 						throw null;
 			}
 			Console.WriteLine("OK!");
@@ -125,13 +125,13 @@ namespace Charlotte.Tests
 			{
 				if (testcnt % 1000 == 0) Console.WriteLine("TEST-0003-03, " + testcnt); // cout
 
-				ulong[] table = SCommon.Generate(SCommon.CRandom.GetRange(1, 1000), () => SCommon.CRandom.GetULong()).ToArray();
+				ulong[] table = SCommon.Generate(SCommon.CRandom.GetRange(1, 1000), () => SCommon.CRandom.GetULong64()).ToArray();
 
 				RandomUnit ru = new RandomUnit(new RandomNumberGenerator_03() { Table = table });
 
 				//for (int c = 0; c < 100; c++)
 				foreach (ulong value in table)
-					if (ru.GetULong() != value)
+					if (ru.GetULong64() != value)
 						throw null;
 			}
 			Console.WriteLine("OK!");

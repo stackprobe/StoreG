@@ -64,7 +64,7 @@ namespace Charlotte.Commons
 			return dest;
 		}
 
-		public uint GetUInt()
+		public uint GetUInt32()
 		{
 			byte[] r = GetBytes(4);
 
@@ -75,7 +75,7 @@ namespace Charlotte.Commons
 				((uint)r[3] << 24);
 		}
 
-		private ulong GetULong48()
+		public ulong GetULong48()
 		{
 			byte[] r = GetBytes(6);
 
@@ -88,7 +88,7 @@ namespace Charlotte.Commons
 				((ulong)r[5] << 40);
 		}
 
-		public ulong GetULong()
+		public ulong GetULong64()
 		{
 			byte[] r = GetBytes(8);
 
@@ -103,7 +103,7 @@ namespace Charlotte.Commons
 				((ulong)r[7] << 56);
 		}
 
-		public ulong GetULong_M(ulong modulo)
+		public ulong GetULong(ulong modulo)
 		{
 			if (modulo == 0)
 				throw new Exception("Bad modulo");
@@ -113,7 +113,7 @@ namespace Charlotte.Commons
 
 			do
 			{
-				r = this.GetULong();
+				r = this.GetULong64();
 			}
 			while (r < t);
 
@@ -122,19 +122,19 @@ namespace Charlotte.Commons
 			return r;
 		}
 
-		public uint GetUInt_M(uint modulo)
+		public uint GetUInt(uint modulo)
 		{
-			return (uint)this.GetULong_M((ulong)modulo);
+			return (uint)this.GetULong((ulong)modulo);
 		}
 
 		public long GetLong(long modulo)
 		{
-			return (long)this.GetULong_M((ulong)modulo);
+			return (long)this.GetULong((ulong)modulo);
 		}
 
 		public int GetInt(int modulo)
 		{
-			return (int)this.GetUInt_M((uint)modulo);
+			return (int)this.GetULong((ulong)modulo);
 		}
 
 		public int GetRange(int minval, int maxval)
