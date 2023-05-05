@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+# Visual Studio Version 17
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Claes20200001", "Claes20200001\Claes20200001.csproj", "{D2EB218B-F624-4F86-BC32-02D9BAF3FFAC}"
 EndProject
 Global
