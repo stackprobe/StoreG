@@ -59,7 +59,7 @@ static void Main2(uint millis)
 		char *outputDir = makeFreeDir();
 		char *outputFile;
 
-		outputFile = combine(outputDir, "muonxxxs.wav");
+		outputFile = combine_cx(outputDir, xcout("muon%us.wav", millis / 1000));
 
 		MakeMuonWav(millis, outputFile);
 
