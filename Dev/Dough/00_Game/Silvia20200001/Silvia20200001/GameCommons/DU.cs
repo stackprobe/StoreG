@@ -43,6 +43,15 @@ namespace Charlotte.GameCommons
 		/// </summary>
 		public static VScreen FreeScreen = new VScreen(GameConfig.ScreenSize.W, GameConfig.ScreenSize.H);
 
+		/// <summary>
+		/// 指定されたクラスの静的フィールドを初期化する。
+		/// </summary>
+		/// <param name="type">クラスのタイプ</param>
+		public static void InitializeStaticFields(Type type)
+		{
+			type.TypeInitializer.Invoke(null, null);
+		}
+
 		public static void Pin<T>(T data)
 		{
 			GCHandle h = GCHandle.Alloc(data, GCHandleType.Pinned);

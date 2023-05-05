@@ -234,7 +234,7 @@ namespace Charlotte.GameCommons
 
 			Initialized();
 
-			TabascoPizzaSausage.Run();
+			TProgram.Run();
 		}
 
 		/// <summary>

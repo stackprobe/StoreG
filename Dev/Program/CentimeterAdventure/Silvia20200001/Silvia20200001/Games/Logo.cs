@@ -90,9 +90,9 @@ namespace Charlotte.Games
 
 		private static void Touch()
 		{
-			Musics.TOUCH_HANDLE.GetType();
-			Pictures.TOUCH_HANDLE.GetType();
-			SoundEffects.TOUCH_HANDLE.GetType();
+			DU.InitializeStaticFields(typeof(Musics));
+			DU.InitializeStaticFields(typeof(Pictures));
+			DU.InitializeStaticFields(typeof(SoundEffects));
 
 			Music.TouchAll();
 			Picture.TouchAll();
