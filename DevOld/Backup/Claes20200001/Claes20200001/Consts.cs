@@ -19,65 +19,39 @@ namespace Charlotte
 		/// </summary>
 		public const string DEST_DIR = @"P:\";
 
-		private static string SRC_IGNORE_NAMES_FILE
-		{
-			get
-			{
-				if (ProcMain.DEBUG)
-					return @"..\..\..\..\doc\Ignore-Src.txt";
-				else
-					return Path.Combine(ProcMain.SelfDir, "Ignore-Src.txt");
-			}
-		}
-
-		private static string DEST_IGNORE_NAMES_FILE
-		{
-			get
-			{
-				if (ProcMain.DEBUG)
-					return @"..\..\..\..\doc\Ignore-Dest.txt";
-				else
-					return Path.Combine(ProcMain.SelfDir, "Ignore-Dest.txt");
-			}
-		}
-
-		private static string[] _srcIgnoreNames = null;
-
 		/// <summary>
 		/// コピー元で無視するフォルダのローカル名
 		/// </summary>
-		public static string[] SRC_IGNORE_NAMES
+		public static string[] SRC_IGNORE_NAMES = new string[]
 		{
-			get
-			{
-				if (_srcIgnoreNames == null)
-					_srcIgnoreNames = File.ReadAllLines(SRC_IGNORE_NAMES_FILE, Encoding.UTF8)
-						.Select(v => v.Trim())
-						.Where(v => v != "")
-						.ToArray();
-
-				return _srcIgnoreNames;
-			}
-		}
-
-		private static string[] _destIgnoreNames = null;
+			"$Recycle.Bin",
+			"$SysReset",
+			"$WinREAgent",
+			"Config.Msi",
+			"Documents and Settings",
+			"MSOCache",
+			"PerfLogs",
+			"Program Files",
+			"Program Files (x86)",
+			"ProgramData",
+			"Programs", // 常駐系プログラムの格納場所(個人的に作成)
+			"Recovery",
+			"RECYCLER",
+			"System Volume Information",
+			"Users",
+			"Windows",
+			"Windows.old",
+			"WINNT",
+		};
 
 		/// <summary>
 		/// コピー先で無視するフォルダのローカル名
 		/// </summary>
-		public static string[] DEST_IGNORE_NAMES
+		public static string[] DEST_IGNORE_NAMES = new string[]
 		{
-			get
-			{
-				if (_destIgnoreNames == null)
-					_destIgnoreNames = File.ReadAllLines(DEST_IGNORE_NAMES_FILE, Encoding.UTF8)
-						.Select(v => v.Trim())
-						.Where(v => v != "")
-						.ToArray();
-
-				return _destIgnoreNames;
-			}
-		}
+			"$Recycle.Bin",
+			"System Volume Information",
+		};
 
 		private static string _logFile2 = null;
 		private static string _logFile3 = null;
