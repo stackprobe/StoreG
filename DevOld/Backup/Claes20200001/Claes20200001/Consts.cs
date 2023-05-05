@@ -79,6 +79,9 @@ namespace Charlotte
 			}
 		}
 
+		private static string _logFile2 = null;
+		private static string _logFile3 = null;
+
 		/// <summary>
 		/// ログファイル出力先(1)
 		/// </summary>
@@ -91,15 +94,39 @@ namespace Charlotte
 		{
 			get
 			{
-				string dir = Environment.GetEnvironmentVariable("TMP");
+				if (_logFile2 == null)
+				{
+					string dir = Environment.GetEnvironmentVariable("TMP");
 
-				if (string.IsNullOrEmpty(dir))
-					throw new Exception("Bad TMP");
+					if (string.IsNullOrEmpty(dir))
+						throw new Exception("Bad TMP");
 
-				if (!Directory.Exists(dir))
-					throw new Exception("no TMP");
+					if (!Directory.Exists(dir))
+						throw new Exception("no TMP");
 
-				return Path.Combine(dir, "Backup_{929b33b1-1b3d-4115-98cd-81658694cd43}.log");
+					_logFile2 = Path.Combine(dir, "Backup_{929b33b1-1b3d-4115-98cd-81658694cd43}.log");
+				}
+				return _logFile2;
+			}
+		}
+
+		/// <summary>
+		/// ログファイル出力先(3)
+		/// </summary>
+		public static string LOG_FILE_3
+		{
+			get
+			{
+				if (_logFile3 == null)
+				{
+					string dir = @"C:\temp";
+
+					if (!Directory.Exists(dir))
+						throw new Exception("no " + dir);
+
+					_logFile3 = Path.Combine(dir, "Backup.log");
+				}
+				return _logFile3;
 			}
 		}
 	}

@@ -115,8 +115,8 @@ namespace Charlotte
 			string[] rDirs = Directory.GetDirectories(Consts.SRC_DIR);
 			string[] wDirs = Directory.GetDirectories(Consts.DEST_DIR);
 
-			Array.Sort(rDirs, SCommon.Comp); // 2bs
-			Array.Sort(wDirs, SCommon.Comp); // 2bs
+			Array.Sort(rDirs, SCommon.Comp);
+			Array.Sort(wDirs, SCommon.Comp);
 
 			string[] rNames = rDirs.Select(dir => SCommon.ChangeRoot(dir, Consts.SRC_DIR)).ToArray();
 			string[] wNames = wDirs.Select(dir => SCommon.ChangeRoot(dir, Consts.DEST_DIR)).ToArray();
@@ -150,16 +150,7 @@ namespace Charlotte
 			ProcMain.WriteLog("----");
 
 			ProcMain.WriteLog("CONFIRM-OPEN");
-			if (MessageBox.Show(
-				"バックアップを開始します。\n" +
-				"以下のプログラムを終了して下さい。\n" +
-				"・CrystalDiskInfo\n" +
-				"・Becky",
-				"バックアップ開始",
-				MessageBoxButtons.OKCancel,
-				MessageBoxIcon.Information
-				) != DialogResult.OK
-				)
+			if (MessageBox.Show("バックアップを開始します。", "バックアップ開始", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
 			{
 				ProcMain.WriteLog("BACKUP-CANCELLED");
 				DistributeLogFile();
@@ -209,6 +200,22 @@ namespace Charlotte
 			ProcMain.WriteLog("BACKUP-ED");
 
 			DistributeLogFile();
+
+			MessageBox.Show("バックアップは完了しました。", "バックアップ完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+
+		private void DistributeLogFile()
+		{
+			DistributeLogFile_File(Consts.LOG_FILE_1);
+			DistributeLogFile_File(Consts.LOG_FILE_2);
+			DistributeLogFile_File(Consts.LOG_FILE_3);
+		}
+
+		private void DistributeLogFile_File(string destFile)
+		{
+			SCommon.DeletePath(destFile);
+
+			File.Copy(ProcLogFile, destFile);
 		}
 
 		private void CopySpecialDir(string rDir, string wDir, string title)
@@ -224,19 +231,6 @@ namespace Charlotte
 			P_Batch(string.Format(@"ROBOCOPY.EXE ""{0}"" ""{1}"" /MIR", rDir, wDir));
 
 			ProcMain.WriteLog("ROBOCOPY-ED " + title);
-		}
-
-		private void DistributeLogFile()
-		{
-			DistributeLogFile_File(Consts.LOG_FILE_1);
-			DistributeLogFile_File(Consts.LOG_FILE_2);
-		}
-
-		private void DistributeLogFile_File(string destFile)
-		{
-			SCommon.DeletePath(destFile);
-
-			File.Copy(ProcLogFile, destFile);
 		}
 
 		private void P_Batch(string command)
