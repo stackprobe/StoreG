@@ -46,7 +46,7 @@ namespace Charlotte
 
 			// --
 #endif
-			//SCommon.Pause();
+			SCommon.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -113,21 +113,47 @@ namespace Charlotte
 				});
 			}
 
-			foreach (string path in paths)
+			foreach (string path in paths) // ファイルの編集
+			{
+				if (File.Exists(path))
+				{
+					byte[] fileDataOrig = File.ReadAllBytes(path);
+					byte[] fileData = SCommon.GetPart(fileDataOrig, 0);
+
+					if (SCommon.EqualsIgnoreCase(Path.GetExtension(path), ".sln"))
+					{
+						fileData = Common.Replace(
+							fileData,
+							Encoding.ASCII.GetBytes("# Visual C# Express 2010"),
+							Encoding.ASCII.GetBytes("# Visual Studio Version 17")
+							);
+					}
+					if (SCommon.Comp(fileDataOrig, fileData) != 0) // ? 変更された。
+					{
+						Console.WriteLine("* " + path);
+
+						File.WriteAllBytes(path, fileData);
+					}
+				}
+			}
+			foreach (string path in paths) // ファイルの追加・削除
 			{
 				string markFile = Path.Combine(path, Consts.EMPRY_DIR_MARK_FILE_NAME);
 
 				if (File.Exists(markFile) && !IsOneFileDir(path))
 				{
+					Console.WriteLine("- " + markFile);
+
 					SCommon.DeletePath(markFile);
 				}
 				else if (IsEmptyDir(path))
 				{
+					Console.WriteLine("+ " + markFile);
+
 					File.WriteAllBytes(markFile, SCommon.EMPTY_BYTES);
 				}
 			}
-
-			foreach (string path in paths)
+			foreach (string path in paths) // ファイル・ディレクトリ名の変更
 			{
 				string dir = Path.GetDirectoryName(path);
 				string localName = Path.GetFileName(path);

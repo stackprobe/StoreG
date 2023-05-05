@@ -45,7 +45,7 @@ namespace Charlotte
 
 			// --
 #endif
-			//SCommon.Pause();
+			SCommon.Pause();
 		}
 
 		private void Main4(ArgsReader ar)
@@ -104,12 +104,23 @@ namespace Charlotte
 
 			foreach (string file in files) // ファイルの編集
 			{
-				byte[] fileData = File.ReadAllBytes(file);
+				byte[] fileDataOrig = File.ReadAllBytes(file);
+				byte[] fileData = SCommon.GetPart(fileDataOrig, 0);
 
 				if (IsEncodingUTF8WithBOM(fileData) || IsEncodingSJIS(fileData))
 				{
 					fileData = NewLineToCRLF(fileData).ToArray();
-
+				}
+				if (SCommon.EqualsIgnoreCase(Path.GetExtension(file), ".sln"))
+				{
+					fileData = Common.Replace(
+						fileData,
+						Encoding.ASCII.GetBytes("# Visual Studio Version 17"),
+						Encoding.ASCII.GetBytes("# Visual C# Express 2010")
+						);
+				}
+				if (SCommon.Comp(fileDataOrig, fileData) != 0) // ? 変更された。
+				{
 					ProcMain.WriteLog("* " + file);
 
 					File.WriteAllBytes(file, fileData);
