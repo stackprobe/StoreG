@@ -44,7 +44,17 @@ static void MakeMuonWav(uint millis, char *outputFile)
 }
 static void Main2(uint millis)
 {
-	if (!hasArgs(1))
+	if (hasArgs(1))
+	{
+		char *outputFile = makeFullPath(nextArg());
+
+		errorCase_m(hasArgs(1), "不明なコマンド引数(2)");
+
+		MakeMuonWav(millis, outputFile);
+
+		memFree(outputFile);
+	}
+	else
 	{
 		char *outputDir = makeFreeDir();
 		char *outputFile;
@@ -57,14 +67,6 @@ static void Main2(uint millis)
 
 		memFree(outputDir);
 		memFree(outputFile);
-	}
-	else
-	{
-		char *outputFile = nextArg();
-
-		errorCase_m(hasArgs(1), "不明なコマンド引数(2)");
-
-		MakeMuonWav(millis, outputFile);
 	}
 }
 int main(int argc, char **argv)

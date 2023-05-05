@@ -9471,7 +9471,7 @@ C:\Factory\SubTools\wavCut4Game.c(142) : main // 関数
 C:\Factory\SubTools\wavMakeMuon.c(7) : HZ // 定義
 C:\Factory\SubTools\wavMakeMuon.c(9) : MakeMuonWav // 関数
 C:\Factory\SubTools\wavMakeMuon.c(45) : Main2 // 関数
-C:\Factory\SubTools\wavMakeMuon.c(70) : main // 関数
+C:\Factory\SubTools\wavMakeMuon.c(72) : main // 関数
 C:\Factory\SubTools\wavPutMuon.c(11) : HZ // 定義
 C:\Factory\SubTools\wavPutMuon.c(12) : MUON_LEVEL // 定義
 C:\Factory\SubTools\wavPutMuon.c(13) : MUON_LEVEL_MARGIN // 定義
