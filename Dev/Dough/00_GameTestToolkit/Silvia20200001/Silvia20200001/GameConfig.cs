@@ -9,7 +9,7 @@ namespace Charlotte
 {
 	public static class GameConfig
 	{
-		public static string GameTitle = "Gattonero-2023-04-05";
+		public static string GameTitle = "Gattonero-2020-00-01";
 
 		public static I2Size ScreenSize = new I2Size(960, 540);
 
@@ -18,8 +18,7 @@ namespace Charlotte
 
 		public static string[] FontFileResPaths = new string[]
 		{
-			@"General\Font\K Gothic\K Gothic.ttf",
-			@"General\Font\木漏れ日ゴシック\komorebi-gothic.ttf",
+			//@"General\Dummy.ttf",
 		};
 
 		public static Color LibbonBackColor = Color.DarkSlateGray;
