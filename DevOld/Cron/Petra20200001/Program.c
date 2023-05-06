@@ -20,14 +20,19 @@ static void Error_LN(int lineno)
 
 // ---- utils
 
-static int IsExistFile(char *file)
+static int IsValidBatchFile(char *file)
 {
 	FILE *fp = fopen(file, "rb");
+	int ret = 0;
 
-	if (fp && fclose(fp) != 0)
-		Error();
+	if (fp)
+	{
+		ret = fgetc(fp) != EOF; // ? not empty file
 
-	return !!fp;
+		if (fclose(fp) != 0)
+			Error();
+	}
+	return ret;
 }
 static char *GetStrDateTime(time_t t)
 {
@@ -46,7 +51,7 @@ static char *GetStrDateTime(time_t t)
 
 #define STOP_EV_NAME "Cron_STOP_{baf19612-401e-4417-9b1f-48b0b8b72501}"
 #define BATCH_NAME_MAX 12
-#define BATCH_MAX (4 * 99)
+#define BATCH_MAX 100
 
 typedef struct Batch_st
 {
@@ -63,15 +68,18 @@ static void CollectBatch_SS(int suffix, int scale)
 {
 	char name[BATCH_NAME_MAX];
 	int count;
+	Batch_t *i;
 
 	for (count = 1; count <= 99; count++)
 	{
 		sprintf(name, "Cron%d%c.bat", count, suffix);
 
-		if (IsExistFile(name))
+		if (IsValidBatchFile(name))
 		{
-			Batch_t *i = Batches + BatchCount++;
+			if (BATCH_MAX <= BatchCount)
+				Error();
 
+			i = Batches + BatchCount++;
 			strcpy(i->Name, name);
 			i->PeriodSec = count * scale;
 			i->RemainingSec = 0;
@@ -85,9 +93,8 @@ static void CollectBatch(void)
 	CollectBatch_SS('h', 3600);
 	CollectBatch_SS('d', 86400);
 }
-static int ExecuteAllBatchIfTimeout(int elapsedSec)
+static void ExecuteAllBatchIfTimeout(int elapsedSec)
 {
-	int nextWaitSec = 60; // rough limit
 	int index;
 
 	for (index = 0; index < BatchCount; index++)
@@ -107,6 +114,12 @@ static int ExecuteAllBatchIfTimeout(int elapsedSec)
 			i->RemainingSec = i->PeriodSec;
 		}
 	}
+}
+static int GetNextWaitSec(void)
+{
+	int nextWaitSec = 300; // rough limit
+	int index;
+
 	for (index = 0; index < BatchCount; index++)
 	{
 		Batch_t *i = Batches + index;
@@ -141,8 +154,10 @@ void main(int argc, char **argv)
 		printf("Cron-START\n");
 
 		while (WaitForSingleObject(evStop, waitSec * 1000) == WAIT_TIMEOUT)
-			waitSec = ExecuteAllBatchIfTimeout(waitSec);
-
+		{
+			ExecuteAllBatchIfTimeout(waitSec);
+			waitSec = GetNextWaitSec();
+		}
 		printf("Cron-END\n");
 	}
 	CloseHandle(evStop);
